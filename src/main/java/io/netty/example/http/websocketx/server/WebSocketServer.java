@@ -25,6 +25,7 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
+import io.netty.util.concurrent.DefaultThreadFactory;
 
 /**
  * A HTTP server which serves Web Socket requests at:
@@ -60,10 +61,10 @@ public final class WebSocketServer {
             sslCtx = null;
         }
 
-        EventLoopGroup bossGroup = new NioEventLoopGroup(2);
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
-        // EventLoopGroup bossGroup = new NioEventLoopGroup(2, new DefaultThreadFactory("bossGroupPool", true));
-        // EventLoopGroup workerGroup = new NioEventLoopGroup(4,new DefaultThreadFactory("workerGroupPool", true));
+        // EventLoopGroup bossGroup = new NioEventLoopGroup(2);
+        // EventLoopGroup workerGroup = new NioEventLoopGroup();
+        EventLoopGroup bossGroup = new NioEventLoopGroup(2, new DefaultThreadFactory("bossGroupPool", true));
+        EventLoopGroup workerGroup = new NioEventLoopGroup(50,new DefaultThreadFactory("workerGroupPool", true));
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
